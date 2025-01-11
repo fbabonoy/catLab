@@ -74,7 +74,6 @@ initialLoad()
 breedSelect.addEventListener("change", (e) => {
 
   // console.log(options);
-  getCatData(e.target.value)
 
   for (let option in e.target) {
     if (Number(option)) {
@@ -85,6 +84,8 @@ breedSelect.addEventListener("change", (e) => {
 
     }
   }
+  getCatData(e.target.value)
+
 })
 
 async function getCatData(cat) {
