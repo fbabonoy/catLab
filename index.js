@@ -11,7 +11,9 @@ const progressBar = document.getElementById("progressBar");
 const getFavouritesBtn = document.getElementById("getFavouritesBtn");
 
 // Step 0: Store your API key here for reference and easy access.
-const API_KEY = "";
+const API_KEY = "live_N544Y2FQYikguEIiktiqTdX3oL9S1xpjRkmWQfS4u3GqoqwCAHREgsZFJYFuL5oO";
+let key = `https://api.thecatapi.com/v1/images/search?limit=10&has_breeds=1&api_key=${API_KEY}`;
+
 
 /**
  * 1. Create an async function "initialLoad" that does the following:
@@ -21,6 +23,37 @@ const API_KEY = "";
  *  - Each option should display text equal to the name of the breed.
  * This function should execute immediately.
  */
+
+
+async function initialLoad() {
+  try {
+
+    let data = await fetch(key)
+    let json = await data.json()
+
+    let fragment = document.createDocumentFragment()
+
+    for (let cat of json) {
+      console.log(cat.url);
+      let option = document.createElement("option")
+      option.value = cat.id
+      option.textContent = cat.breeds[0].name
+      fragment.appendChild(option)
+
+    
+      getCatData(cat.id)
+
+    }
+
+    breedSelect.appendChild(fragment)
+
+  } catch (e) {
+    console.log(e)
+  }
+
+}
+
+initialLoad()
 
 /**
  * 2. Create an event handler for breedSelect that does the following:
@@ -36,6 +69,44 @@ const API_KEY = "";
  * - Each new selection should clear, re-populate, and restart the Carousel.
  * - Add a call to this function to the end of your initialLoad function above to create the initial carousel.
  */
+
+
+breedSelect.addEventListener("change", (e) => {
+
+  // console.log(options);
+  getCatData(e.target.value)
+
+  for (let option in e.target) {
+    if (Number(option)) {
+      Carousel.clear()
+      if (e.target[option].value !== e.target.value) {
+        getCatData(e.target[option].value)
+      }
+
+    }
+  }
+})
+
+async function getCatData(cat) {
+
+  let catInfo = `https://api.thecatapi.com/v1/images/${cat}`
+
+  try {
+    let data = await fetch(catInfo)
+    let json = await data.json()
+    // console.log(json);
+
+    let image = Carousel.createCarouselItem(json.url)
+
+    Carousel.appendCarousel(image)
+    Carousel.start()
+  } catch (e) {
+    console.log(e);
+
+  }
+
+}
+
 
 /**
  * 3. Fork your own sandbox, creating a new one named "JavaScript Axios Lab."
