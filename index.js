@@ -36,7 +36,6 @@ function loadWindow(data) {
   for (let cat of data) {
     let option = document.createElement("option")
     option.value = cat.id
-
     option.textContent = cat.name
     fragment.appendChild(option)
 
@@ -56,7 +55,6 @@ function createCarousel(data) {
   Carousel.clear()
 
   let info = document.createElement("p")
-  // console.log(data);
 
   for (let cat of data) {
     // console.log(cat);
@@ -87,7 +85,7 @@ breedSelect.addEventListener("change", (e) => {
 
 
 //8
-let favId = {}
+let favId = { "unPP08xOZ": "" }
 
 export async function favourite(imgId) {
 
@@ -95,33 +93,42 @@ export async function favourite(imgId) {
     "image_id": imgId,
     "sub_id": "user-1"
   }
+  console.log(imgId);
 
   if (!favId[imgId]) {
     let favorite = await axious1.axiousPost("/favourites", rawBody)
     console.log(favorite);
     favId[imgId] = favorite
   } else {
-    await axious1.axiousDel(`/favourites/`+ favId[imgId])
+    await axious1.axiousDel(`/favourites/` + favId[imgId])
     delete favId[imgId];
   }
 }
 
-/**
- * 9. Test your favourite() function by creating a getFavourites() function.
- * - Use Axios to get all of your favourites from the cat API.
- * - Clear the carousel and display your favourites when the button is clicked.
- *  - You will have to bind this event listener to getFavouritesBtn yourself.
- *  - Hint: you already have all of the logic built for building a carousel.
- *    If that isn't in its own function, maybe it should be so you don't have to
- *    repeat yourself in this section.
- */
+//9
 
 getFavouritesBtn.addEventListener("click", (e) => {
   for (let id in favId) {
-    axious1.axiousGet("/images/search${selection}", createCarousel)
+    axious1.axiousGet(`/images/${id}`, favCarousel)
   }
 })
 
+
+function favCarousel(data) {
+  Carousel.clear()
+
+  infoDump.innerHTML = ""
+  let info = document.createElement("p")
+
+  let image = Carousel.createCarouselItem(data.url)
+  Carousel.appendCarousel(image)
+  if (data.breeds[0]) {
+    info.textContent = data.breeds[0].description
+  }
+
+  infoDump.appendChild(info)
+  Carousel.start()
+}
 /**
  * 10. Test your site, thoroughly!
  * - What happens when you try to load the Malayan breed?
