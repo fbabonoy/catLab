@@ -58,6 +58,7 @@ function createCarousel(data) {
 
   let info = document.createElement("p")
 
+//10
   if (data < 1) {
                 
     data = [{
@@ -99,11 +100,18 @@ breedSelect.addEventListener("change", (e) => {
 //8
 let favId = { "unPP08xOZ": "" }
 
-export async function favourite(imgId) {
+export async function favourite(imgId, element) {
+  let color
+  if (!favId[imgId]){
+    color = "red" 
+  } else {
+    color = "lightpink"
 
+  }
+  element.target.style.color = color 
   let rawBody = {
     "image_id": imgId,
-    "sub_id": "user-1"
+    "sub_id": "user"
   }
   console.log(imgId);
 
@@ -120,6 +128,7 @@ export async function favourite(imgId) {
 //9
 
 getFavouritesBtn.addEventListener("click", (e) => {
+  
   for (let id in favId) {
     axious1.axiousGet(`/images/${id}`, favCarousel)
   }
@@ -141,10 +150,3 @@ function favCarousel(data) {
   infoDump.appendChild(info)
   Carousel.start()
 }
-/**
- * 10. Test your site, thoroughly!
- * - What happens when you try to load the Malayan breed?
- *  - If this is working, good job! If not, look for the reason why and fix it!
- * - Test other breeds as well. Not every breed has the same data available, so
- *   your code should account for this.
- */
