@@ -24,6 +24,7 @@ export class AxiousObj {
                 //6
                 onDownloadProgress: this.updateProgress.bind(this)
             })
+
             loadWindow(this.#request.data)
         } catch (e) {
             console.log(e);
@@ -50,7 +51,7 @@ export class AxiousObj {
 
         }
     }
-//5
+    //5
     addInterseptor() {
         let startTime
         this.axiosInstance.interceptors.request.use((config) => {
@@ -69,24 +70,24 @@ export class AxiousObj {
                 `Request ${response.config.url} completed in ${duration}ms`
             );
             return response
-        } , (error) => {
-                if (error.config && error.config.metadata) {
-                    const endTime = new Date();
-                    const duration = endTime - startTime;
-                    console.error(
-                        `Request ${error.config.url} failed after ${duration}ms`
-                    );
-                }
-                return Promise.reject(error);
+        }, (error) => {
+            if (error.config && error.config.metadata) {
+                const endTime = new Date();
+                const duration = endTime - startTime;
+                console.error(
+                    `Request ${error.config.url} failed after ${duration}ms`
+                );
             }
+            return Promise.reject(error);
+        }
         )
     }
 
 
     updateProgress(update) {
         // console.log(update);
-        this.#progressBar.style.width = `${(update.progress * 100)}%`               
+        this.#progressBar.style.width = `${(update.progress * 100)}%`
     }
 
- 
+
 }

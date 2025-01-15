@@ -30,8 +30,9 @@ async function fetchLoad(link, loadCall) {
   }
 }
 
-function loadWindow(data) {
+function loadWindow(data = []) {
   let fragment = document.createDocumentFragment()
+
 
   for (let cat of data) {
     let option = document.createElement("option")
@@ -41,6 +42,7 @@ function loadWindow(data) {
 
   }
   selection = data[0].id
+
 
   // fetchLoad(catInfo, createCarousel)
   axious1.axiousGet(`/images/search?limit=10&breed_ids=${selection}`, createCarousel)
@@ -56,9 +58,19 @@ function createCarousel(data) {
 
   let info = document.createElement("p")
 
-  for (let cat of data) {
-    // console.log(cat);
+  if (data < 1) {
+                
+    data = [{
+      breeds: [{name: "missy",
+          description:""
+      }],
+      id: "notFound",
+      url:"https://27bslash6.com/images/Missy_poster_07.jpg"}
+      ]
 
+  }
+
+  for (let cat of data) {
     let image = Carousel.createCarouselItem(cat.url, cat.breeds[0].name, cat.id)
     Carousel.appendCarousel(image)
     if (cat.breeds[0]) {
